@@ -1,0 +1,22 @@
+1. Start project > django-admin startproject <project_name>
+2. create app > django admin startapp <app_name>
+3. in project>settings.py>INSTALLED_APPS[]> add the name of created app as a string
+4. create 'templates' directory in the app and add templates
+5. in project> settings.py> TEMPLATES[]> DIRS[], add the templates directory > os.path.join(BASE_DIR,'templates')
+6. create app>urls.py
+7. in app>views.py create a function based view   'index(request)'
+8. in project>urls.py add a blank path and redirect to app>urls.py
+9. from app>urls.py redirect to a app>views.py> 'index(request)'
+10.from app>views.py render the template
+
+Now Check if the template is rendered on the server or not, if not then debug the code and make sure the template renders
+
+11. in app>models.py create a class based data model
+12. in app>admin.py register the model admin.site.register(<model name>)
+13. run in terminal 'python manage.py makemigrations', you'll see your models being added
+14. run in terminal 'python manage.py migrate'
+15. run in terminal 'python manage.py createsuperuser' and create admin
+
+Now go to /admin and log in to see if model table is created or not, if not then debug
+
+
