@@ -1,0 +1,112 @@
+{% extends 'base.html' %} {% block body %}
+
+<h1 class="text-center">Todos</h1>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+      <path
+        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+      />
+    </symbol>
+    <symbol
+      id="exclamation-triangle-fill"
+      fill="currentColor"
+      viewBox="0 0 16 16"
+    >
+      <path
+        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"
+      />
+    </symbol>
+</svg>
+
+{% comment %}  Add a new todo form start {% endcomment %}
+<div class="container my-3" style="width: 70vh">
+  <form method="post" action="/">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input
+        class="form-control mb-3"
+        id="exampleInputEmail1"
+        name="todo"
+        placeholder="Create a new Todo"
+      />
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </form>
+  {% if isSaved %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <svg
+      class="bi flex-shrink-0 me-2"
+      width="24"
+      height="24"
+      role="img"
+      aria-label="Success:"
+    >
+      <use xlink:href="#check-circle-fill" />
+    </svg>
+    Todo saved successfully!!
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endif %} 
+  {% if isEmpty %}
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <svg
+      class="bi flex-shrink-0 me-2"
+      width="24"
+      height="24"
+      role="img"
+      aria-label="Danger:"
+    >
+      <use xlink:href="#exclamation-triangle-fill" />
+    </svg>
+    Cannot save empty todo!!
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endif %}
+</div>
+{% comment %}  Add a new todo form end {% endcomment %}
+
+{% comment %} Todo list start {% endcomment %}
+<div class="container overflow-auto" style="width: 70vh; height: 60vh">
+  <div class="list-group">
+    {% for todo in allTodos %}
+    <div class="list-group-item" {% if todo.isDone %} style="text-decoration: line-through" {% endif %} >
+      <form style="display: inline" method="post" action="toggleStatus/">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{todo.id}}" />
+        <input type="checkbox" onchange="this.form.submit()" {% if todo.isDone %} checked {% endif %}/>
+      </form>
+      {{ todo.todo }}
+      <a href="{% url 'deleteTodo' todo.id%}" style="position: absolute; right: 0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 0 24 24"
+          width="24px"
+          fill="#E21717"
+        >
+          <path d="M0 0h24v24H0V0z" fill="none" />
+          <path
+            d="M14.12 10.47L12 12.59l-2.13-2.12-1.41 1.41L10.59 14l-2.12 2.12 1.41 1.41L12 15.41l2.12 2.12 1.41-1.41L13.41 14l2.12-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"
+          />
+        </svg>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% comment %} Todo list end {% endcomment %}
+
+{% endblock body %}
