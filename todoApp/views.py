@@ -1,8 +1,10 @@
-from django.shortcuts import redirect, render, HttpResponse
+from django.shortcuts import redirect, render
 from .models import Todo
-from io import BytesIO
 from reportlab.pdfgen import canvas
-import csv
+from reportlab.lib.units import inch
+import io
+from django.http import FileResponse
+
 
 # Create your views here.
 
@@ -18,17 +20,15 @@ def index(request):
             todo = Todo(todo=note)
             todo.save()
             isSaved = True
-
     context = {
         'isSaved': isSaved,
         'isEmpty': isEmpty,
         'allTodos': allTodos
     }
-
     return render(request=request, template_name='index.html', context=context)
 
 
-def deleteTodo(request,todoId):
+def deleteTodo(request, todoId):
     todo = Todo.objects.get(id=todoId)
     todo.delete()
     return redirect(index)
@@ -38,6 +38,21 @@ def toggleStatus(request):
     if request.method == 'POST':
         todoId = request.POST['id']
         todo = Todo.objects.get(id=todoId)
-        todo.isDone = False if todo.isDone else True 
+        todo.isDone = False if todo.isDone else True
         todo.save()
     return redirect(index)
+
+
+def export(request):
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    allTodos = Todo.objects.all()
+    y = 800
+    for todo in allTodos:
+        isDone = '✔' if todo.isDone else '✖'
+        p.drawString(50, y,  todo.todo + '        ' + isDone)
+        y -= 20
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='todos.pdf')

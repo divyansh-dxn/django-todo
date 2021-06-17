@@ -5,5 +5,5 @@ urlpatterns = [
     path('',views.index),
     path('toggleStatus/',views.toggleStatus),
     path('<int:todoId>/deleteTodo',views.deleteTodo,name='deleteTodo'),
-    # path('print/',views.print,name='print')
+    path('export/',views.export,name='export')
 ]

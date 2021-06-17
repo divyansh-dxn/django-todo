@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block body %}
 
-<h1 class="text-center">Todos</h1>
+<h1 class="text-center mt-3">Todo App</h1>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
       <path
@@ -19,74 +19,40 @@
 </svg>
 
 {% comment %}  Add a new todo form start {% endcomment %}
-<div class="container my-3" style="width: 70vh">
+<div class="container mt-3" style="width: 80vh">
   <form method="post" action="/">
     {% csrf_token %}
     <div class="mb-3">
       <input
-        class="form-control mb-3"
+        class="form-control"
         id="exampleInputEmail1"
         name="todo"
         placeholder="Create a new Todo"
       />
-
-      <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="row">
+        <button id="submitBtn" class="btn mt-3 btn-primary ms-2 me-3 col-8" type="submit">
+        <i class="fa fa-plus me-3" aria-hidden="true"></i>
+        Add
+        </button>
+        <a class="btn mt-3 btn-outline-secondary col-3" href="{% url 'export' %}">
+        <i class="fa fa-file me-2" style="font-size:16px"></i>
+        Export
+        </a>
       </div>
     </div>
   </form>
-  {% if isSaved %}
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <svg
-      class="bi flex-shrink-0 me-2"
-      width="24"
-      height="24"
-      role="img"
-      aria-label="Success:"
-    >
-      <use xlink:href="#check-circle-fill" />
-    </svg>
-    Todo saved successfully!!
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  {% endif %} 
-  {% if isEmpty %}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    <svg
-      class="bi flex-shrink-0 me-2"
-      width="24"
-      height="24"
-      role="img"
-      aria-label="Danger:"
-    >
-      <use xlink:href="#exclamation-triangle-fill" />
-    </svg>
-    Cannot save empty todo!!
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
-  </div>
-  {% endif %}
-</div>
+</div>  
 {% comment %}  Add a new todo form end {% endcomment %}
 
 {% comment %} Todo list start {% endcomment %}
-<div class="container overflow-auto" style="width: 70vh; height: 60vh">
+<div class="container overflow-auto" style="width: 80vh; height: 60vh">
   <div class="list-group">
     {% for todo in allTodos %}
     <div class="list-group-item" {% if todo.isDone %} style="text-decoration: line-through" {% endif %} >
       <form style="display: inline" method="post" action="toggleStatus/">
         {% csrf_token %}
         <input type="hidden" name="id" value="{{todo.id}}" />
-        <input type="checkbox" onchange="this.form.submit()" {% if todo.isDone %} checked {% endif %}/>
+        <input class="me-3" type="checkbox" onchange="this.form.submit()" {% if todo.isDone %} checked {% endif %}/>
       </form>
       {{ todo.todo }}
       <a href="{% url 'deleteTodo' todo.id%}" style="position: absolute; right: 0">
@@ -110,3 +76,4 @@
 {% comment %} Todo list end {% endcomment %}
 
 {% endblock body %}
+
