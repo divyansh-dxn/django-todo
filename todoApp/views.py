@@ -5,11 +5,8 @@ import io
 from django.http import FileResponse
 
 
-# Create your views here.
-
+# this is the index function, it also performs adding a new todo 
 def index(request):
-    isSaved = False
-    isEmpty = False
     allTodos = Todo.objects.all()
     if request.method == 'POST':
         note = request.POST['todo']
@@ -20,19 +17,17 @@ def index(request):
             todo.save()
             isSaved = True
     context = {
-        'isSaved': isSaved,
-        'isEmpty': isEmpty,
         'allTodos': allTodos
     }
     return render(request=request, template_name='index.html', context=context)
 
-
+#  getting id via request and deleting the requested to-do
 def deleteTodo(request, todoId):
     todo = Todo.objects.get(id=todoId)
     todo.delete()
     return redirect(index)
 
-
+#  getting id via post request and toggling the status
 def toggleStatus(request):
     if request.method == 'POST':
         todoId = request.POST['id']
@@ -42,6 +37,7 @@ def toggleStatus(request):
     return redirect(index)
 
 
+#  exporting all todos from the database in a pdf format along with the isDone status
 def export(request):
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer)
