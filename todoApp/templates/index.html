@@ -21,7 +21,7 @@
 <div class="container mt-3 py-3 border border-3 rounded-3" style="width: 90vh; ">
 <h1 class="text-center mt-3">Todo App</h1>
 
-
+{% comment %}  Add a new todo form start {% endcomment %}
 <div class="mt-3" >
   <form method="post" action="/">
     {% csrf_token %}
@@ -78,7 +78,6 @@
 </div>
 {% comment %} Todo list end {% endcomment %}
 
-{% comment %}  Add a new todo form start {% endcomment %}
 </div>
 
 {% endblock body %}
