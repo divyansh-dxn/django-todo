@@ -1,7 +1,6 @@
 from django.shortcuts import redirect, render
 from .models import Todo
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
 import io
 from django.http import FileResponse
 
